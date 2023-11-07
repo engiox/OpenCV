@@ -16,6 +16,7 @@ using std::cout;
 
 int threshold_value = 0;
 int threshold_type = 3;
+int binary_value = 255;
 int const max_value = 255;
 int const max_type = 4;
 int const max_binary_value = 255;
@@ -38,7 +39,8 @@ static void Threshold_Demo( int, void* )
      3: Threshold to Zero
      4: Threshold to Zero Inverted
     */
-    threshold( src_gray, dst, threshold_value, max_binary_value, threshold_type );
+    //threshold( src_gray, dst, threshold_value, max_binary_value, threshold_type );
+    threshold( src_gray, dst, threshold_value, binary_value, threshold_type );
     imshow( window_name, dst );
 }
 //![Threshold_Demo]
@@ -77,6 +79,10 @@ int main( int argc, char** argv )
     createTrackbar( trackbar_value,
                     window_name, &threshold_value,
                     max_value, Threshold_Demo ); // Create a Trackbar to choose Threshold value
+    
+    createTrackbar( "Binary value",
+                    window_name, &binary_value,
+                    max_binary_value, Threshold_Demo );
     //! [trackbar]
 
     Threshold_Demo( 0, 0 ); // Call the function to initialize
