@@ -41,9 +41,9 @@ int main ( int argc, char** argv )
 
     //![init_arguments]
     // Initialize arguments for the filter
-    anchor = Point( -1, -1 );
-    delta = 0;
-    ddepth = -1;
+    anchor = Point( -1, -1 );   //### -1 indicates KERNEL CENTER
+    delta = 0;      //### value added to each pixel
+    ddepth = -1;    //### same as the SOURCE image
     //![init_arguments]
 
     // Loop - Will filter the image with different kernel sizes each 0.5 seconds
