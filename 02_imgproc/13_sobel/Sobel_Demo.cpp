@@ -39,6 +39,11 @@ int main( int argc, char** argv )
   int scale = parser.get<int>("scale");
   int delta = parser.get<int>("delta");
   int ddepth = CV_16S;
+
+  if (!parser.check()) {
+    parser.printErrors();
+    return EXIT_FAILURE;
+  } else cout << "Parsing complete!\n";
   //![variables]
 
   //![load]
