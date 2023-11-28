@@ -12,23 +12,24 @@
 using namespace cv;
 using namespace std;
 
-Mat src_gray;
-int thresh = 100;
-RNG rng(12345);
-
 /// Function header
 void thresh_callback(int, void* );
+
+struct callBackData {
+    Mat image;
+    int thresh{ 100 };
+    RNG rng{ 12345 };
+};
 
 /**
  * @function main
  */
 int main( int argc, char** argv )
 {
-    //! [setup]
     Mat src_gray;
-    int thresh = 100;
-    RNG rng(12345);
+    callBackData cbData{ src_gray, 100, 12345 };
 
+    //! [setup]
     /// Load source image
     CommandLineParser parser( argc, argv, "{@input | stuff.jpg | input image}" );
     Mat src = imread( samples::findFile( parser.get<String>( "@input" ) ) );
@@ -53,8 +54,8 @@ int main( int argc, char** argv )
 
     //! [trackbar]
     const int max_thresh = 255;
-    createTrackbar( "Canny thresh:", source_window, &thresh, max_thresh, thresh_callback, (void*) &src_gray );
-    thresh_callback( 0, (void*) &src_gray );
+    createTrackbar( "Canny thresh:", source_window, &thresh, max_thresh, thresh_callback );
+    thresh_callback( 0, 0 );
     //! [trackbar]
 
     waitKey();
@@ -64,13 +65,12 @@ int main( int argc, char** argv )
 /**
  * @function thresh_callback
  */
-void thresh_callback(int, void* pSrc)
+void thresh_callback(int, void* )
 {
-    Mat* pSrc_Gray{ (Mat*) pSrc};
     //! [Canny]
     /// Detect edges using Canny
     Mat canny_output;
-     Canny( *pSrc_Gray, canny_output, thresh, thresh*2 );
+    Canny( src_gray, canny_output, thresh, thresh*2 );
     //! [Canny]
 
     //! [findContours]
