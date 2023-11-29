@@ -13,21 +13,25 @@ using namespace cv;
 using namespace std;
 
 /// Function header
-void thresh_callback(int, void* );
+void thresh_callback(int, void *);
 
-struct callBackData {
-    Mat image;
-    int thresh{ 100 };
-    RNG rng{ 12345 };
-};
+void NewFunction(void *pcbData, cv::Mat &canny_output, int thresh);
+
+//struct callBackData {
+//    Mat image;
+//    int thresh;
+//};
+
+RNG rng{ 12345 };
 
 /**
  * @function main
  */
 int main( int argc, char** argv )
 {
+    //callBackData cbData{ src_gray, 100 };
     Mat src_gray;
-    callBackData cbData{ src_gray, 100, 12345 };
+    int thresh{100};
 
     //! [setup]
     /// Load source image
@@ -54,8 +58,9 @@ int main( int argc, char** argv )
 
     //! [trackbar]
     const int max_thresh = 255;
-    createTrackbar( "Canny thresh:", source_window, &thresh, max_thresh, thresh_callback );
-    thresh_callback( 0, 0 );
+    createTrackbar( "Canny thresh:", source_window, &thresh, max_thresh,
+                    thresh_callback, (void*)&src_gray);
+    thresh_callback( thresh, (void*)&src_gray );
     //! [trackbar]
 
     waitKey();
@@ -65,12 +70,12 @@ int main( int argc, char** argv )
 /**
  * @function thresh_callback
  */
-void thresh_callback(int, void* )
+void thresh_callback(int thresh, void* pcbData)
 {
     //! [Canny]
     /// Detect edges using Canny
     Mat canny_output;
-    Canny( src_gray, canny_output, thresh, thresh*2 );
+    Canny( *(reinterpret_cast<Mat*>(pcbData)), canny_output, thresh, thresh*2 );
     //! [Canny]
 
     //! [findContours]
